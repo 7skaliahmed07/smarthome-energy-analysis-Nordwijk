@@ -1,0 +1,26 @@
+nordwijk-env/
+*.db
+*.pyc
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+env/
+.venv/
+.env
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build & distribution
+dist/
+build/
+*.egg-info/
+*.log
