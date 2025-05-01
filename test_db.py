@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 def test_database():
     try:
         # Initialize the database
-        db = HomeMessagesDB('sqlite:///myhMy shoes. Hey. Hey, Cortana. Cortana. Hey. Hey, Cortana. Hey, Cortana. Hey, Cortana. Hey, Cortana. Hey, Cortana. Hey, Cortana. Download. Make back the happen we should allow me. To get three hours of games. Hey, Cortana. Open any. Hey, Cortana. Play. I. Hey, Cortana. Hey, hey, hey. Woah, Ferengi. Go. I. Hey, Cortana. ome.db')
+        db = HomeMessagesDB('sqlite:///test.db')
         print("Database initialized successfully.")
 
         # Insert a device

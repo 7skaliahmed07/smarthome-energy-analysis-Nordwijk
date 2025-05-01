@@ -27,3 +27,5 @@ build/
 
 # Assignment
 group_assignment.md
+smarthome.db
+*.db
