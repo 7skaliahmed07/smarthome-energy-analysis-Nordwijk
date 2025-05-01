@@ -21,7 +21,7 @@ Process and analyze 32 months of IoT data from a Dutch smart home to uncover ene
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-## Database Setup and Testing
-The database is implemented in `home_messages_db.py` using SQLite. To test:
-1. Run `python test_db.py` to initialize `myhome.db`, insert sample data, and query tables.
-2. Open `myhome.db` in DB Browser for SQLite to view tables (`devices`, `smartthings_messages`, `electricity_usage`, `gas_usage`, `weather`) and data.
+## Database Initialization
+To create a clean SQLite database (`myhome.db`):
+1. Run `python create_db.py`.
+2. Verify tables in DB Browser for SQLite (`devices`, `smartthings_messages`, `electricity_usage`, `gas_usage`, `weather`).
