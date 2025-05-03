@@ -1,7 +1,8 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, Index
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+
 
 Base = declarative_base()
 
@@ -25,12 +26,15 @@ class SmartThingsMessage(Base):
     attribute = Column(String)
     value = Column(String)
     unit = Column(String)
+    __table_args__ = (
+        Index('idx_smartthings_unique', 'device_id', 'epoch', 'capability', 'attribute', unique=True),
+    )
 
 class ElectricityUsage(Base):
     """Table to store electricity usage from P1e source."""
     __tablename__ = 'electricity_usage'
     reading_id = Column(Integer, primary_key=True)
-    epoch = Column(Integer, unique=True)  # Ensure no duplicate timestamps
+    epoch = Column(String, unique=True)  # Ensure no duplicate timestamps
     t1_kwh = Column(Float)  # Low-cost hours
     t2_kwh = Column(Float)  # High-cost hours
 
@@ -38,14 +42,14 @@ class GasUsage(Base):
     """Table to store gas usage from P1g source."""
     __tablename__ = 'gas_usage'
     reading_id = Column(Integer, primary_key=True)
-    epoch = Column(Integer, unique=True)  # Ensure no duplicate timestamps
+    epoch = Column(String, unique=True)  # Ensure no duplicate timestamps
     gas_m3 = Column(Float)
 
 class Weather(Base):
     """Table to store weather data from OpenWeatherMap (optional)."""
     __tablename__ = 'weather'
     reading_id = Column(Integer, primary_key=True)
-    epoch = Column(Integer, unique=True)  # Ensure no duplicate timestamps
+    epoch = Column(String, unique=True)  # Ensure no duplicate timestamps
     temperature = Column(Float)
     humidity = Column(Float)
 

@@ -32,6 +32,9 @@ def smartthings(dburl, files):
                 missing = [col for col in required_columns if col not in df.columns]
                 raise click.UsageError(f"Missing columns in {file}: {missing}")
 
+            # Convert epoch (ISO 8601) to UTC datetime string (YYYY-MM-DD HH:MM:SS)
+            df['epoch'] = pd.to_datetime(df['epoch'], utc=True).dt.strftime('%Y-%m-%d %H:%M:%S')
+
             # Remove duplicates within the file
             df = df.drop_duplicates(subset=['name', 'epoch', 'capability', 'attribute'])
 
@@ -42,7 +45,7 @@ def smartthings(dburl, files):
                 device_id = db.insert_device(device['name'], device['loc'], device['level'])
                 device_map[device['name']] = device_id
 
-            # Prepare messages with device_id
+            # Prepare messages
             messages = df.merge(
                 pd.Series(device_map, name='device_id'),
                 left_on='name',
