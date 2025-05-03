@@ -2,14 +2,10 @@ import click
 import pandas as pd
 from home_messages_db import HomeMessagesDB, Device, SmartThingsMessage
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import func
 
 @click.command()
 @click.option('-d', '--dburl', required=True, help='SQLAlchemy database URL (e.g., sqlite:///smarthome.db)')
 @click.argument('files', nargs=-1, type=click.Path(exists=True))
-
-
-
 def smartthings(dburl, files):
     """
     Insert SmartThings data into the database in bulk.
@@ -36,6 +32,9 @@ def smartthings(dburl, files):
                 missing = [col for col in required_columns if col not in df.columns]
                 raise click.UsageError(f"Missing columns in {file}: {missing}")
 
+            # Remove duplicates within the file
+            df = df.drop_duplicates(subset=['name', 'epoch', 'capability', 'attribute'])
+
             # Insert or get devices
             devices = df[['name', 'loc', 'level']].drop_duplicates()
             device_map = {}
@@ -43,7 +42,7 @@ def smartthings(dburl, files):
                 device_id = db.insert_device(device['name'], device['loc'], device['level'])
                 device_map[device['name']] = device_id
 
-            # Prepare messages
+            # Prepare messages with device_id
             messages = df.merge(
                 pd.Series(device_map, name='device_id'),
                 left_on='name',
@@ -66,8 +65,8 @@ def smartthings(dburl, files):
                     'epoch': row['epoch'],
                     'capability': row['capability'],
                     'attribute': row['attribute'],
-                    'value': str(row['value']),  # Ensure string
-                    'unit': str(row['unit'])     # Ensure string
+                    'value': str(row['value']),
+                    'unit': str(row['unit'])
                 }
                 for _, row in messages.iterrows()
                 if (row['device_id'], row['epoch'], row['capability'], row['attribute']) not in existing_set
@@ -75,9 +74,14 @@ def smartthings(dburl, files):
 
             # Bulk insert new messages
             if new_messages:
-                db.session.bulk_insert_mappings(SmartThingsMessage, new_messages)
-                db.session.commit()
-                click.echo(f"Inserted {len(new_messages)} new rows from {file}.")
+                try:
+                    db.session.bulk_insert_mappings(SmartThingsMessage, new_messages)
+                    db.session.commit()
+                    click.echo(f"Inserted {len(new_messages)} new rows from {file}.")
+                except SQLAlchemyError as e:
+                    db.session.rollback()
+                    click.echo(f"Database error (possible duplicate): {e}", err=True)
+                    raise
             else:
                 click.echo(f"No new rows to insert from {file} (all duplicates).")
 
