@@ -8,9 +8,9 @@ Process and analyze 32 months of IoT data from a Dutch smart home to uncover ene
 - *Goal*: Build a relational database pipeline and derive actionable insights.  
 
 # 🛠️ Tech Stack  
-- *Database*: PostgreSQL (+ TimescaleDB for time-series).  
+- *Database*: Sqlite.  
 - *ETL*: Python (Pandas, SQLAlchemy).  
-- *Visualization*: Grafana/Plotly.  
+- *Visualization*: Grafana/Plotly/Matplotlib/Seaborn.  
 
 # 📂 Repository Structure  
 ├── /data/raw/           # Original datasets (JSON, CSV)  
@@ -21,7 +21,13 @@ Process and analyze 32 months of IoT data from a Dutch smart home to uncover ene
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-## Database Initialization
-To create a clean SQLite database (`myhome.db`):
+
+# File Handling
+1. The gz-to-original.py file will handle all .gz files and convert them back to their original file extensions. 
+
+# Database Initialization
+To create a clean SQLite database (`smarthome.db`):
 1. Run `python create_db.py`.
 2. Verify tables in DB Browser for SQLite (`devices`, `smartthings_messages`, `electricity_usage`, `gas_usage`, `weather`).
+3. Home_messages.py contains three parts which are database schema, connection and methods of tables.
+4. smartthings.py file extract devices from csv and add all csv's in bulk to the database.

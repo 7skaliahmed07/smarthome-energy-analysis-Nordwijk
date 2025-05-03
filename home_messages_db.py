@@ -5,6 +5,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 Base = declarative_base()
 
+
+# PART-1 - Schema of All tables
 class Device(Base):
     """Table to store unique smart home devices."""
     __tablename__ = 'devices'
@@ -47,6 +49,9 @@ class Weather(Base):
     temperature = Column(Float)
     humidity = Column(Float)
 
+
+
+# PART-2 - Class to manage the database
 class HomeMessagesDB:
     """Class to manage the smart home messages database."""
     def __init__(self, db_url):
@@ -75,6 +80,9 @@ class HomeMessagesDB:
         if self.engine:
             self.engine.dispose()
             self.engine = None
+
+
+# PART-3 - Methods to insert and query data
 
     def insert_device(self, name, loc, level):
         """Insert a device if it doesn't exist and return its ID."""
