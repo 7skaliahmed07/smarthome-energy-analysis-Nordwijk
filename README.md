@@ -30,4 +30,4 @@ To create a clean SQLite database (`smarthome.db`):
 1. Run `python create_db.py`.
 2. Verify tables in DB Browser for SQLite (`devices`, `smartthings_messages`, `electricity_usage`, `gas_usage`, `weather`).
 3. Home_messages.py contains three parts which are database schema, connection and methods of tables.
-4. smartthings.py file extract devices from csv and add all csv's in bulk to the database.
+4. Extract all CSV data from smartthings.py, p1e, and p1g files, and perform bulk creation in the database.
