@@ -44,8 +44,8 @@ def p1e(dburl, files):
             else:
                 raise click.UsageError(f"Missing electricity import columns in {file}. Expected 'Import T1 kWh'/'Import T2 kWh' or 'Electricity imported T1'/'Electricity imported T2'")
 
-            # Convert time to UTC datetime string (YYYY-MM-DD HH:MM:SS)
-            df['epoch'] = pd.to_datetime(df['time'], utc=True).dt.strftime('%Y-%m-%d %H:%M:%S')
+            # Convert time to Unix timestamp (seconds)
+            df['epoch'] = pd.to_datetime(df['time'], utc=True).astype('int64') // 10**9
 
             # Ensure required columns after renaming
             required_columns = ['epoch', 't1_kwh', 't2_kwh']

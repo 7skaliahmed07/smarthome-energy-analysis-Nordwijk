@@ -33,8 +33,8 @@ def p1g(dburl, files):
             # Rename column to match database schema
             df = df.rename(columns={'Total gas used': 'gas_m3'})
 
-            # Convert time (YYYY-MM-DD HH:MM) to UTC datetime string (YYYY-MM-DD HH:MM:SS)
-            df['epoch'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M', utc=True).dt.strftime('%Y-%m-%d %H:%M:%S')
+            # Convert time to Unix timestamp (seconds)
+            df['epoch'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M', utc=True).astype('int64') // 10**9
 
             # Ensure required columns after renaming
             required_columns = ['epoch', 'gas_m3']

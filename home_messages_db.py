@@ -21,7 +21,7 @@ class SmartThingsMessage(Base):
     __tablename__ = 'smartthings_messages'
     message_id = Column(Integer, primary_key=True)
     device_id = Column(Integer, ForeignKey('devices.device_id'))
-    epoch = Column(Integer)
+    epoch = Column(Integer, nullable=False, unique=False)  
     capability = Column(String)
     attribute = Column(String)
     value = Column(String)
@@ -34,28 +34,28 @@ class ElectricityUsage(Base):
     """Table to store electricity usage from P1e source."""
     __tablename__ = 'electricity_usage'
     reading_id = Column(Integer, primary_key=True)
-    epoch = Column(String, unique=True)  # Ensure no duplicate timestamps
-    t1_kwh = Column(Float)  # Low-cost hours
-    t2_kwh = Column(Float)  # High-cost hours
+    epoch = Column(Integer, nullable=False, unique=True)  
+    t1_kwh = Column(Float)
+    t2_kwh = Column(Float)
 
 class GasUsage(Base):
     """Table to store gas usage from P1g source."""
     __tablename__ = 'gas_usage'
     reading_id = Column(Integer, primary_key=True)
-    epoch = Column(String, unique=True)  # Ensure no duplicate timestamps
+    epoch = Column(Integer, nullable=False, unique=True)  
     gas_m3 = Column(Float)
 
 class Weather(Base):
     """Table to store weather data from OpenWeatherMap (optional)."""
     __tablename__ = 'weather'
-    reading_id = Column(Integer, primary_key=True)
-    epoch = Column(String, unique=True)  # Ensure no duplicate timestamps
+    weather_id = Column(Integer, primary_key=True, autoincrement=True)
+    epoch = Column(Integer, nullable=False, unique=True)  
     temperature = Column(Float)
     humidity = Column(Float)
+    precipitation = Column(Float)
+    wind_speed = Column(Float)
+    pressure = Column(Float)
 
-
-
-# PART-2 - Class to manage the database
 class HomeMessagesDB:
     """Class to manage the smart home messages database."""
     def __init__(self, db_url):
@@ -84,9 +84,6 @@ class HomeMessagesDB:
         if self.engine:
             self.engine.dispose()
             self.engine = None
-
-
-# PART-3 - Methods to insert and query data
 
     def insert_device(self, name, loc, level):
         """Insert a device if it doesn't exist and return its ID."""
@@ -119,7 +116,6 @@ class HomeMessagesDB:
     def insert_electricity(self, epoch, t1_kwh, t2_kwh):
         """Insert an electricity usage record."""
         try:
-            # Check for duplicate epoch
             existing = self.session.query(ElectricityUsage).filter_by(epoch=epoch).first()
             if not existing:
                 record = ElectricityUsage(epoch=epoch, t1_kwh=t1_kwh, t2_kwh=t2_kwh)
@@ -132,7 +128,6 @@ class HomeMessagesDB:
     def insert_gas(self, epoch, gas_m3):
         """Insert a gas usage record."""
         try:
-            # Check for duplicate epoch
             existing = self.session.query(GasUsage).filter_by(epoch=epoch).first()
             if not existing:
                 record = GasUsage(epoch=epoch, gas_m3=gas_m3)
@@ -142,13 +137,13 @@ class HomeMessagesDB:
             self.session.rollback()
             raise Exception(f"Failed to insert gas usage: {e}")
 
-    def insert_weather(self, epoch, temperature, humidity):
-        """Insert a weather record (optional)."""
+    def insert_weather(self, epoch, temperature, humidity, precipitation, wind_speed, pressure):
+        """Insert a weather record."""
         try:
-            # Check for duplicate epoch
             existing = self.session.query(Weather).filter_by(epoch=epoch).first()
             if not existing:
-                record = Weather(epoch=epoch, temperature=temperature, humidity=humidity)
+                record = Weather(epoch=epoch, temperature=temperature, humidity=humidity,
+                                precipitation=precipitation, wind_speed=wind_speed, pressure=pressure)
                 self.session.add(record)
                 self.session.commit()
         except SQLAlchemyError as e:
