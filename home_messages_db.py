@@ -3,9 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
-
 Base = declarative_base()
-
 
 # PART-1 - Schema of All tables
 class Device(Base):
@@ -46,7 +44,7 @@ class GasUsage(Base):
     gas_m3 = Column(Float)
 
 class Weather(Base):
-    """Table to store weather data from OpenWeatherMap (optional)."""
+    """Table to store weather data from openweather (optional)."""
     __tablename__ = 'weather'
     weather_id = Column(Integer, primary_key=True, autoincrement=True)
     epoch = Column(Integer, nullable=False, unique=True)  
@@ -138,7 +136,7 @@ class HomeMessagesDB:
             raise Exception(f"Failed to insert gas usage: {e}")
 
     def insert_weather(self, epoch, temperature, humidity, precipitation, wind_speed, pressure):
-        """Insert a weather record."""
+        """Insert a single weather record."""
         try:
             existing = self.session.query(Weather).filter_by(epoch=epoch).first()
             if not existing:
@@ -149,6 +147,36 @@ class HomeMessagesDB:
         except SQLAlchemyError as e:
             self.session.rollback()
             raise Exception(f"Failed to insert weather data: {e}")
+
+    def bulk_insert_weather(self, weather_data):
+        """Bulk insert multiple weather records."""
+        try:
+            # Fetch existing epochs to avoid duplicates
+            existing_epochs = {row.epoch for row in self.session.query(Weather.epoch).all()}
+            
+            # Prepare new rows, excluding duplicates
+            new_rows = [
+                {
+                    'epoch': data['epoch'],
+                    'temperature': data['temperature'],
+                    'humidity': data['humidity'],
+                    'precipitation': data['precipitation'],
+                    'wind_speed': data['wind_speed'],
+                    'pressure': data['pressure']
+                }
+                for data in weather_data
+                if data['epoch'] not in existing_epochs
+            ]
+            
+            # Bulk insert
+            if new_rows:
+                self.session.bulk_insert_mappings(Weather, new_rows)
+                self.session.commit()
+                return len(new_rows)
+            return 0
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise Exception(f"Failed to bulk insert weather data: {e}")
 
     def query_smartthings(self, capability=None, attribute=None, start_epoch=None, end_epoch=None):
         """Query SmartThings messages with optional filters."""
