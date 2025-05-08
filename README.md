@@ -32,8 +32,8 @@ To create a clean SQLite database (`smarthome.db`):
 3. Home_messages.py contains three parts which are database schema, connection and methods of tables.
 4. Extract all CSV data from smartthings.py, p1e, and p1g files, and perform bulk creation in the database.
 5. Change the timestamp to Integer UTC (Compact,Fast, UTC based)
-# Data Validation and Cleaning
-6.
+
+6. # Data Validation and Cleaning
 - *Validation*:
   - Removed rows with `NULL` or invalid values (e.g., negative usage, out-of-range weather data).
   - Verified no true duplicates in any table (based on unique constraints).
@@ -45,3 +45,9 @@ To create a clean SQLite database (`smarthome.db`):
   - Confirmed foreign key consistency in `smartthings_messages`.
   - Checked for gaps in weather data (noted 1-hour gap at the end).
   - Rebuilt `smartthings_messages` table to enforce unique index on `(device_id, epoch, capability, attribute)`.
+
+7. # Data Analysis and Aggregation
+- *Objective*: Analyze and aggregate data for insights.
+- *Analyses*:
+  - *Usage Distribution*: Computed hourly averages of electricity (t1_kwh, t2_kwh) and gas (gas_m3) usage, saved to `hourly_usage.csv`.
+  - *Occupancy Detection*: Identified unoccupied intervals based on low SmartThings activity (e.g., switch/motion), saved to `unoccupied_intervals.csv`.
