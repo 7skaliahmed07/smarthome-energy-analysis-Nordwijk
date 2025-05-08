@@ -51,3 +51,16 @@ To create a clean SQLite database (`smarthome.db`):
 - *Analyses*:
   - *Usage Distribution*: Computed hourly averages of electricity (t1_kwh, t2_kwh) and gas (gas_m3) usage, saved to `hourly_usage.csv`.
   - *Occupancy Detection*: Identified unoccupied intervals based on low SmartThings activity (e.g., switch/motion), saved to `unoccupied_intervals.csv`.
+
+8. # Visualization and Reporting
+- **Objective**: Visualize data and compile reports using Jupyter notebooks.
+- **Notebooks**:
+  - *usage_distribution.ipynb*: Visualizes the hourly distribution of electricity and gas usage.
+    - Plot: Line plot of `t1_kwh`, `t2_kwh`, and `gas_m3` vs. hour.
+    - Findings: Evening peaks (hour 21) in usage, early morning lows (hours 0–5).
+  - *occupancy_analysis.ipynb*: Analyzes unoccupied intervals based on SmartThings activity gaps.
+    - Plot: Histogram of gap durations (in hours).
+    - Findings: 2338 intervals, many overnight or during the day (e.g., work hours).
+  - *weather_correlation.ipynb*: Correlates daily temperature with gas usage.
+    - Plot: Scatter plot of temperature vs. gas usage.
+    - Findings: Negative correlation expected (higher gas usage on colder days).
