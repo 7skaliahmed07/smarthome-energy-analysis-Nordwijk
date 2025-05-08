@@ -32,3 +32,16 @@ To create a clean SQLite database (`smarthome.db`):
 3. Home_messages.py contains three parts which are database schema, connection and methods of tables.
 4. Extract all CSV data from smartthings.py, p1e, and p1g files, and perform bulk creation in the database.
 5. Change the timestamp to Integer UTC (Compact,Fast, UTC based)
+# Data Validation and Cleaning
+6.
+- *Validation*:
+  - Removed rows with `NULL` or invalid values (e.g., negative usage, out-of-range weather data).
+  - Verified no true duplicates in any table (based on unique constraints).
+- *Time Range Alignment*:
+  - Trimmed all tables to match the range: 2022-06-01 to 2025-01-31 (epoch 1654041600 to 1735622400).
+  - *SmartThings Messages*: Starts late at 2022-10-09 due to dataset limitations; documented as a constraint.
+  - *Weather*: Missing the last hour (2025-01-31 00:00:00 UTC); deemed acceptable due to minimal impact.
+- *Additional Checks*:
+  - Confirmed foreign key consistency in `smartthings_messages`.
+  - Checked for gaps in weather data (noted 1-hour gap at the end).
+  - Rebuilt `smartthings_messages` table to enforce unique index on `(device_id, epoch, capability, attribute)`.

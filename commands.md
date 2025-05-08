@@ -13,3 +13,20 @@ Creating a Backup file
 
 Env Activate
 - nordwijk-env\Scripts\activate
+
+
+Cleaning Database Queries:
+-- SmartThings Messages
+SELECT * FROM smartthings_messages WHERE value IS NULL OR value = '' OR epoch IS NULL;
+SELECT device_id, COUNT(*) as count FROM smartthings_messages GROUP BY device_id HAVING count = 0;
+
+-- Electricity Usage
+SELECT * FROM electricity_usage WHERE t1_kwh IS NULL OR t2_kwh IS NULL OR epoch IS NULL OR t1_kwh < 0 OR t2_kwh < 0;
+
+-- Gas Usage
+SELECT * FROM gas_usage WHERE gas_m3 IS NULL OR epoch IS NULL OR gas_m3 < 0;
+
+-- Weather
+SELECT * FROM weather WHERE temperature IS NULL OR humidity IS NULL OR precipitation IS NULL OR wind_speed IS NULL OR pressure IS NULL
+OR temperature < -40 OR temperature > 50 OR humidity < 0 OR humidity > 100 OR precipitation < 0 OR wind_speed < 0 OR pressure < 900 OR pressure > 1100;
+
