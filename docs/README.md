@@ -64,3 +64,5 @@ To create a clean SQLite database (`smarthome.db`):
   - *weather_correlation.ipynb*: Correlates daily temperature with gas usage.
     - Plot: Scatter plot of temperature vs. gas usage.
     - Findings: Negative correlation expected (higher gas usage on colder days).
+
+![image_alt](https://github.com/7skaliahmed07/smarthome-energy-analysis-Nordwijk/blob/a9dad3c516209428eb71074f8651f3d2b35a307d/image.jpg)
