@@ -2,6 +2,8 @@
 
 Process and analyze 32 months of IoT data from a Dutch smart home to uncover energy usage patterns and device behavior.  
 
+![image_alt](https://github.com/7skaliahmed07/smarthome-energy-analysis-Nordwijk/blob/a9dad3c516209428eb71074f8651f3d2b35a307d/image.jpg)
+
 # 📌 Overview  
 - *Data Sources*: SmartThings (30+ devices), P1e/P1g (energy meters), OpenWeatherMap.  
 - *Scope*: 2,000+ daily messages over 32 months (temperature, device states, energy use).  
@@ -65,4 +67,4 @@ To create a clean SQLite database (`smarthome.db`):
     - Plot: Scatter plot of temperature vs. gas usage.
     - Findings: Negative correlation expected (higher gas usage on colder days).
 
-![image_alt](https://github.com/7skaliahmed07/smarthome-energy-analysis-Nordwijk/blob/a9dad3c516209428eb71074f8651f3d2b35a307d/image.jpg)
+
