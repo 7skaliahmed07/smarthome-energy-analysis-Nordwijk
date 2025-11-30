@@ -14,13 +14,14 @@ Process and analyze 32 months of IoT data from a Dutch smart home to uncover ene
 - *ETL*: Python (Pandas, SQLAlchemy).  
 - *Visualization*: Grafana/Plotly/Matplotlib/Seaborn.  
 
+```
 # 📂 Repository Structure  
-├── /data/raw/           # Original datasets (JSON, CSV)  
-├── /etl/                # Scripts for data cleaning/loading  
-├── /analysis/           # Jupyter notebooks for exploration  
-├── /docs/               # Schema diagrams, reports  
+├── /data/raw/           
+├── /etl/                
+├── /analysis/            
+├── /docs/            
 └── README.md  
-
+```
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
